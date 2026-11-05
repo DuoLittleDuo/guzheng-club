@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>古筝社团招新 · 弦起清音，筝韵同行</title>
+<style>
+  :root{
+    --ink:#2b2723; --paper:#f7f1e3; --red:#9e2b25; --gold:#c9a227; --jade:#3a6b5e;
+    --line:#d8c9a8;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; color:var(--ink);
+    font-family:"KaiTi","STKaiti","Songti SC","SimSun",serif;
+    background:#f3ead6 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='40' height='40'%3E%3Crect width='40' height='40' fill='%23f3ead6'/%3E%3Ccircle cx='20' cy='20' r='1.2' fill='%23e7d8b5'/%3E%3C/svg%3E");
+    line-height:1.95; font-size:17px;
+  }
+  /* 左上角可点击播放背景音乐 */
+  #music-toggle{
+    position:fixed; top:14px; left:14px; z-index:999;
+    background:var(--red); color:#fff5e0; padding:9px 16px; border-radius:24px;
+    cursor:pointer; font-size:15px; box-shadow:0 4px 14px rgba(0,0,0,.25);
+    border:1px solid var(--gold); user-select:none; transition:.25s;
+  }
+  #music-toggle:hover{ transform:translateY(-2px); }
+  #music-toggle.playing{ background:var(--jade); }
+
+  header.hero{
+    text-align:center; padding:60px 20px 30px;
+    background:linear-gradient(180deg,#9e2b25 0%,#7c211c 100%);
+    color:#fff5e0; box-shadow:0 6px 18px rgba(0,0,0,.2);
+  }
+  header.hero h1{ margin:0; font-size:40px; letter-spacing:6px; }
+  header.hero p{ margin:10px 0 0; font-size:19px; opacity:.95; letter-spacing:2px; }
+
+  nav.topnav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(247,241,227,.96); backdrop-filter:blur(4px);
+    border-bottom:2px solid var(--gold);
+    display:flex; justify-content:center; flex-wrap:wrap; gap:6px; padding:12px;
+  }
+  nav.topnav a{
+    text-decoration:none; color:var(--red); font-size:18px; font-weight:bold;
+    padding:6px 16px; border:1px solid var(--line); border-radius:20px; transition:.2s;
+  }
+  nav.topnav a:hover{ background:var(--red); color:#fff5e0; }
+
+  main{ max-width:960px; margin:0 auto; padding:20px; }
+  section{
+    background:var(--paper); border:1px solid var(--line); border-radius:14px;
+    padding:30px 34px; margin:26px 0; box-shadow:0 3px 10px rgba(0,0,0,.06);
+  }
+  section h2{
+    color:var(--red); border-left:6px solid var(--gold); padding-left:14px;
+    font-size:26px; margin-top:0; letter-spacing:2px;
+  }
+  .lead{ color:var(--jade); font-size:18px; }
+  p{ text-align:justify; margin:14px 0; }
+
+  .back-top{
+    display:inline-block; margin-top:18px; text-decoration:none;
+    color:#fff5e0; background:var(--jade); padding:7px 18px; border-radius:18px;
+  }
+  .back-top:hover{ background:#2c5247; }
+
+  /* 活动安排表格 */
+  table.sched{
+    width:100%; border-collapse:collapse; margin-top:14px; background:#fffdf7;
+  }
+  table.sched caption{
+    font-size:22px; color:var(--red); font-weight:bold; padding:10px; letter-spacing:2px;
+  }
+  table.sched th, table.sched td{
+    border:1px solid var(--line); padding:11px 12px; text-align:center;
+  }
+  table.sched th{ background:var(--red); color:#fff5e0; }
+  table.sched td{ text-align:center; }
+  table.sched tr:nth-child(even) td{ background:#fbf6ea; }
+
+  /* 风采展示 */
+  .gallery{ display:flex; flex-wrap:wrap; gap:18px; justify-content:center; margin:16px 0; }
+  .gallery a{ display:block; text-align:center; text-decoration:none; color:var(--ink); }
+  .gallery img{
+    width:220px; height:150px; object-fit:cover; border:4px solid var(--gold);
+    border-radius:10px; transition:.25s; box-shadow:0 4px 12px rgba(0,0,0,.12);
+  }
+  .gallery img:hover{ transform:scale(1.04); border-color:var(--red); }
+  video.show-video{ width:100%; max-width:520px; display:block; margin:18px auto; border-radius:10px; box-shadow:0 4px 14px rgba(0,0,0,.18); }
+  .media-note{ text-align:center; color:var(--jade); }
+
+  /* 报名表单 */
+  table.form{ width:100%; border-collapse:collapse; background:#fffdf7; }
+  table.form th, table.form td{ border:1px solid var(--line); padding:12px; vertical-align:middle; }
+  table.form th{ background:#efe4cb; color:var(--red); width:30%; text-align:left; }
+  table.form input[type=text], table.form textarea, table.form select{
+    width:90%; padding:7px; border:1px solid var(--line); border-radius:6px; font-family:inherit; font-size:15px;
+  }
+  .submit-row{ text-align:center; }
+  .submit-row input{ padding:10px 26px; margin:6px; border:none; border-radius:22px; font-size:16px; cursor:pointer; }
+  .btn-submit{ background:var(--red); color:#fff5e0; }
+  .btn-reset{ background:var(--jade); color:#fff5e0; }
+
+  footer{ text-align:center; padding:26px; color:#8a7a55; font-size:15px; }
+</style>
+</head>
+<body id="top">
+
+  <!-- ① 左上角可点击播放背景音乐 -->
+  <div id="music-toggle">🎵 点击播放背景音乐</div>
+  <audio id="bgm" src="music.mp3" loop preload="auto"></audio>
+
+  <header class="hero">
+    <h1>古 筝 社 团</h1>
+    <p>弦起清音 · 筝韵同行 — 2026 春季学期招新</p>
+  </header>
+
+  <!-- ② 五对指向本网页的导航链接 -->
+  <nav class="topnav">
+    <a href="#intro">社团简介</a>
+    <a href="#schedule">活动安排</a>
+    <a href="#show">风采展示</a>
+    <a href="#story">社员故事</a>
+    <a href="#signup">在线报名</a>
+  </nav>
+
+  <main>
+
+    <!-- 一、社团简介 -->
+    <section id="intro">
+      <h2>一、古筝简介</h2>
+      <p class="lead">筝声婉转，古韵流长。</p>
+      <p>古筝，又名汉筝、秦筝，是我国拥有两千五百多年悠久历史的传统弹拨乐器，音色清越典雅，既能奏响高山流水的悠远意境，也能演绎市井烟火的鲜活情致。古筝社团是为热爱传统民乐、钟情古筝艺术的同学们搭建的交流学习平台，以传承中华优秀传统文化、普及古筝知识、提升演奏水平、丰富校园文化生活为初心，汇聚一群与筝相伴、以乐会友的同好，在琴弦起落间感受国风之美，在声声雅韵里体悟古典情怀。</p>
+      <p>社团面向全体在校学生开放，无论你是从未触碰过琴弦的零基础爱好者，还是已经有一定演奏基础、想要精进技艺的学习者，都可以加入我们。很多同学在初次了解古筝时，会担心自己没有乐理基础、手指不够灵活，害怕难以入门。其实古筝入门门槛友好，音色悦耳动听，上手相对轻松，我们也充分考虑不同成员的基础差异，不会设置严苛的准入门槛。社团不只是单纯的练琴场所，更是一个包容温暖的集体：在这里，没有人会因为弹错音符而被取笑，新手可以慢慢熟悉指法、练习识谱，有基础的同学可以互相切磋技巧、打磨曲目，大家彼此鼓励、共同进步，让古筝从一个遥远的传统乐器，变成日常学习生活里触手可及的浪漫。</p>
+      <p>为了让每一位成员都能学有所获，社团会规划系统化、多样化的学习与活动安排。日常常规活动以每周固定的筝乐练习和教学为主，我们会安排基础指法教学，从托、抹、挑、勾这些最核心的指法开始，循序渐进，带领大家学习认弦、识简谱、把握节奏，熟悉古筝的基本演奏逻辑；针对有一定基础的成员，会开展进阶训练，讲解摇指、颤音、滑音、按音等特色技法。古筝最动人的魅力，就在于按滑音带来的独特色彩，同样一首曲子，不同轻重缓急的按弦，就能传递出截然不同的情绪，这也是我们学习和探讨的重点。同时，我们会拆解经典曲目，从简单的《小星星》《茉莉花》《渔舟唱晚》片段，到《高山流水》《平湖秋月》《战台风》等经典名曲，由浅入深，带领大家感受不同乐曲背后的故事与情感。</p>
+      <p>除了常规的练琴教学，社团还会定期开展丰富的主题活动，跳出单纯的练琴，全方位感受古筝文化。我们会举办民乐赏析沙龙，一起聆听不同流派的筝曲，了解河南筝、山东筝、潮州筝、客家筝等各大流派的风格特点，体会各流派或粗犷热烈、或细腻含蓄的独特韵味；开展传统文化小课堂，讲解古筝的发展历史、乐器构造、古曲背后的典故，了解古人与筝相伴的生活，读懂诗词里 “锦瑟无端五十弦”“欲把心事付瑶琴” 的风雅。我们也会组织合奏排练，古筝独奏自有清幽意境，而多筝合奏、古筝与笛子、琵琶、古典舞等节目融合的形式，更能碰撞出别样的国风火花。大家分工配合，磨合节奏，在合奏中学会倾听、协作，感受和声相融的美感。</p>
+      <p>同时，社团积极参与校园各类文艺活动，为成员提供展示自我的舞台。在校文化节、迎新晚会、毕业汇演、传统文化节等舞台上，常常能看见我们社团成员的身影。登台演奏，既是长久练习成果的检验，也是一次难得的历练。很多同学从一开始面对琴都紧张手抖，到能够从容站上舞台，指尖从容流淌出悠扬乐曲，这个过程，收获的不只是演奏技艺，还有自信与勇气。我们也会举办社团内部的小型雅集、筝乐分享会，没有舞台的拘束，大家围坐在一起，轮流弹奏自己喜欢的曲子，分享练琴心得，聊聊喜欢的国风乐曲，一壶清茶，数声筝鸣，在喧闹的校园里，拥有一方安静雅致的小天地。</p>
+      <p>当然，学筝之路从来不是一蹴而就的，优美的琴声背后，离不开日复一日的坚持。摇指的稳定、颤音的把控、乐曲情感的表达，都需要反复打磨。社团也希望引导大家养成静心坚持的习惯。在快节奏的学习生活里，浮躁、焦虑是常有的状态，而练习古筝，本身就是一场静心修行。当指尖落在琴弦之上，专注于每一个音符、每一次呼吸，外界的喧嚣仿佛都被隔绝，内心慢慢沉静下来。古筝教会我们的，不只是弹奏乐曲，更是学会沉下心、慢下来，在持之以恒的练习中磨炼耐心，学会感受美、表达美，在传统文化的滋养里涵养平和从容的心境。</p>
+      <p>社团始终秉持 “以筝传情，以乐育人” 的理念，不止追求演奏技巧的提升，更希望传递民乐的温度。我们希望打破大家对传统民乐 “老旧、小众” 的刻板印象，让古筝走出古籍画卷，走进当代青年的生活。我们也会尝试融合创新，在尊重传统的基础上，改编大家喜爱的国风流行曲目，让古老的琴弦，也能奏响当代年轻人喜欢的旋律，让传统艺术焕发新的活力，吸引更多同龄人看见古筝、爱上古筝。</p>
+      <p>在这里，有悠扬筝声，有志同道合的伙伴，有耐心的交流，有展示自我的机会。如果你向往古风雅韵，沉醉于筝声清响，想要学会一门乐器，想要在繁忙学业之余寻一份诗意与安宁，欢迎加入古筝社团。与我们共赴一场筝乐之约，指尖拨弦，听流水潺潺，品古韵悠悠，一起在琴弦之间，邂逅跨越千年的国风浪漫，一同传承民乐之美，奏响属于我们的青春乐章。</p>
+      <a class="back-top" href="#top">↑ 返回顶部</a>
+    </section>
+
+    <!-- 三、活动安排（跨多行跨多列表格） -->
+    <section id="schedule">
+      <h2>二、活动安排</h2>
+      <p class="lead">本学期主要活动安排（新成员见面会与古筝基础教学公开课同场举行）。</p>
+      <table class="sched">
+        <caption>古筝社团 2026 年春季学期活动安排表</caption>
+        <tr>
+          <th>序号</th><th>活动名称</th><th>时间</th><th>地点</th>
+        </tr>
+        <tr>
+          <td>1</td><td>新成员见面会</td><td>第 1 周</td>
+          <td rowspan="2">艺术楼 301<br>（同场举行）</td>
+        </tr>
+        <tr>
+          <td>2</td><td>古筝基础教学公开课</td><td>第 2–3 周</td>
+        </tr>
+        <tr>
+          <td>3</td><td>筝乐赏析 · 流派鉴赏会</td><td>第 5 周</td><td>艺术楼 305</td>
+        </tr>
+        <tr>
+          <td>4</td><td>合奏排练专场</td><td>第 8 周</td><td>音乐厅</td>
+        </tr>
+        <tr>
+          <td>5</td><td>内部筝乐雅集</td><td>第 11 周</td><td>社团活动室</td>
+        </tr>
+        <tr>
+          <td>6</td><td>校园文艺汇演 / 迎新晚会</td><td>第 13 周</td><td>大礼堂</td>
+        </tr>
+        <tr>
+          <td>7</td><td>期末成果汇报演出</td><td>第 16 周</td><td>音乐厅</td>
+        </tr>
+      </table>
+      <p class="media-note">更多活动详情请查看 <a href="club_intro.html">《古筝社 · 活动安排》专题页 ↗</a></p>
+      <a class="back-top" href="#top">↑ 返回顶部</a>
+    </section>
+
+    <!-- 四、风采展示（图片 + 视频） -->
+    <section id="show">
+      <h2>三、风采展示</h2>
+      <p class="lead">指尖拨弦，听流水潺潺；光影定格，品古韵悠悠。点击图片可前往活动专题页。</p>
+      <div class="gallery">
+        <a href="club_intro.html">
+          <img src="h3.jpg" alt="社团风采 1">
+          <div>初识古筝</div>
+        </a>
+        <a href="club_intro.html">
+          <img src="h4.jpg" alt="社团风采 2">
+          <div>雅集现场</div>
+        </a>
+        <a href="club_intro.html">
+          <img src="h5.jpg" alt="社团风采 3">
+          <div>舞台展演</div>
+        </a>
+      </div>
+
+      <p class="media-note">— 社团宣传短片 —</p>
+      <!-- ⑤ 导入视频（mp4） -->
+      <video class="show-video" src="movie.mp4" controls width="520" height="320"></video>
+
+      <p class="media-note">— 视频配套音频 —</p>
+      <!-- 视频对应的音频 movie.mp3 -->
+      <audio src="movie.mp3" controls style="display:block;margin:8px auto;"></audio>
+
+      <a class="back-top" href="#top">↑ 返回顶部</a>
+    </section>
+
+    <!-- 六、社员故事 -->
+    <section id="story">
+      <h2>四、社员故事</h2>
+      <p>第一次听见古筝的声音，是在社团招新的摊位上。当时我正被繁杂的学业和各种各样的社团宣讲弄得心烦意乱，一阵清润婉转的琴声穿过人群，轻轻落在耳边。没有激烈的鼓点，没有喧闹的伴奏，只是简简单单的一段《渔舟唱晚》，像落日铺在水面，晚风拂过涟漪，一瞬间，我浮躁的心忽然静了下来。在此之前，我从来没有接触过任何乐器，不识简谱，不懂乐理，连托、抹、挑是什么都一无所知。我总觉得民乐离自己很远，是课本里、古风视频里遥不可及的东西，犹豫很久，才鼓起勇气报名加入古筝社团。</p>
+      <p>刚入社的时候，困难比我想象的多很多。戴上义甲，手指僵硬不听使唤，拨弦要么用力过猛，发出刺耳的杂音，要么力度太轻，声音微弱发虚。反复练习基础指法，手腕发酸，指尖也常常紧绷到发麻。好几次练习结束，看着依旧磕磕绊绊的练习曲，我心里打起退堂鼓，怀疑自己是不是根本没有学乐器的天赋。但社团里的伙伴从来不会催促我，每次常规练习，基础更好的学长学姐都会耐心停下来，一点点帮我调整手型，告诉我手腕要放松，拨弦要稳，不用急于求成。</p>
+      <p>社团的分层教学也给了我很大的底气，我们零基础小组一起慢慢起步，一起对着谱子数拍子，一起为终于连贯弹出一句旋律而开心。每周的社团活动，成了我一周里最期待的时光。放下厚厚的课本，坐到琴前，目光落在琴弦上，所有的焦虑、压力仿佛都被琴声带走。慢慢的，我可以分清每一根弦，熟练完成基础指法，能完整弹出《茉莉花》。在内部雅集上，我鼓起勇气坐到琴前，虽然依旧紧张，偶尔弹错音符，但当琴声响起，周围是伙伴温柔的鼓励，没有嘲笑，只有掌声。</p>
+      <p>我渐渐明白，学古筝不一定是为了登台惊艳所有人，也不是一定要弹多么高难度的曲子。对我来说，古筝是一个可以安放情绪的角落。在快节奏的校园生活里，它教会我慢下来，学会耐心，学会和自己相处。从一个完全不懂音乐的新手，到可以指尖拨弦、奏响旋律，这段旅程，是古筝赠予我的浪漫，也是社团带给我的温暖。我很庆幸当初没有因为胆怯错过这场和筝的相遇。</p>
+      <a class="back-top" href="#top">↑ 返回顶部</a>
+    </section>
+
+    <!-- 七、在线报名表 -->
+    <section id="signup">
+      <h2>五、在线报名</h2>
+      <p class="lead">填写以下信息，加入我们的筝乐之约。</p>
+      <form action="/cgi-bin/post-information" method="post">
+        <table class="form">
+          <tr><th>① 姓名</th><td><input type="text" name="xm" size="12" placeholder="请输入姓名"></td></tr>
+          <tr><th>② 性别</th><td>
+            <input type="radio" name="性别" value="男" checked> 男
+            <input type="radio" name="性别" value="女"> 女
+          </td></tr>
+          <tr><th>③ 出生日期</th><td>
+            <input type="text" name="year" size="2"> 年
+            <input type="text" name="month" size="2"> 月
+            <input type="text" name="day" size="2"> 日
+          </td></tr>
+          <tr><th>④ 手机 / 邮箱</th><td>
+            手机：<input type="text" name="phone" size="14"><br>
+            邮箱：<input type="text" name="email" size="20">
+          </td></tr>
+          <tr><th>⑤ 是否有乐器基础</th><td>
+            <input type="radio" name="基础" value="有" checked> 有
+            <input type="radio" name="基础" value="无"> 无
+          </td></tr>
+          <tr><th>⑥ 兴趣方向（可多选）</th><td>
+            <input type="checkbox" name="爱好" value="古筝演奏"> 古筝演奏
+            <input type="checkbox" name="爱好" value="民乐赏析"> 民乐赏析
+            <input type="checkbox" name="爱好" value="合奏排练"> 合奏排练
+            <input type="checkbox" name="爱好" value="传统文化"> 传统文化
+            <input type="checkbox" name="爱好" value="舞台表演"> 舞台表演
+          </td></tr>
+          <tr><th>⑦ 年级</th><td>
+            <select name="年级" size="1">
+              <option value="大一">大一</option>
+              <option value="大二">大二</option>
+              <option value="大三">大三</option>
+              <option value="大四">大四</option>
+              <option value="研究生">研究生</option>
+            </select>
+          </td></tr>
+          <tr><th>⑧ 自我介绍</th><td>
+            <textarea name="comment" rows="5" cols="50" placeholder="请简单介绍自己、以及加入贝斯社的理由……"></textarea>
+          </td></tr>
+          <tr><th>⑨ 是否服从活动安排</th><td>
+            <input type="radio" name="服从" value="是" checked> 是
+            <input type="radio" name="服从" value="否"> 否
+          </td></tr>
+          <tr><th>⑩ 操作</th><td class="submit-row">
+            <input class="btn-submit" type="submit" value="提交">
+            <input class="btn-reset" type="reset" value="重填">
+          </td></tr>
+        </table>
+      </form>
+      <a class="back-top" href="#top">↑ 返回顶部</a>
+    </section>
+
+  </main>
+
+  <footer>
+    古筝社团 · 弦起清音，筝韵同行 &nbsp;|&nbsp; 2026 春季学期招新 &nbsp;|&nbsp; 愿与你在琴弦之间，邂逅千年国风浪漫
+  </footer>
+
+  <script>
+    const bgm = document.getElementById('bgm');
+    const toggle = document.getElementById('music-toggle');
+    toggle.addEventListener('click', function(){
+      if (bgm.paused){
+        bgm.play();
+        toggle.classList.add('playing');
+        toggle.textContent = '🎵 背景音乐播放中（点击暂停）';
+      } else {
+        bgm.pause();
+        toggle.classList.remove('playing');
+        toggle.textContent = '🎵 点击播放背景音乐';
+      }
+    });
+  </script>
+</body>
+</html>
